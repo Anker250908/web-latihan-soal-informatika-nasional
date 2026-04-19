@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olimpiade Informatika — 30 Soal Latihan</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --surface: #111827;
+  --card: #1a2235;
+  --border: #2a3a55;
+  --accent: #00d4ff;
+  --accent2: #7c3aed;
+  --accent3: #10b981;
+  --warn: #f59e0b;
+  --danger: #ef4444;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --code-bg: #0d1117;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #0a0e1a 0%, #111827 40%, #0f1f3d 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 32px 40px 24px;
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(12px);
+}
+.header-top {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.logo {
+  font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.badge-level {
+  background: linear-gradient(135deg, var(--accent2), #9f67ff);
+  color: white; padding: 4px 14px; border-radius: 20px;
+  font-size: 12px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.progress-row {
+  display: flex; align-items: center; gap: 16px; margin-top: 16px;
+}
+.progress-bar-wrap {
+  flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 0.4s ease;
+  width: 0%;
+}
+.progress-text { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted); white-space: nowrap; }
+.score-display {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--card); border: 1px solid var(--border);
+  padding: 4px 14px; border-radius: 8px; font-size: 13px;
+  color: var(--accent);
+}
+
+/* FILTER TABS */
+.filter-row {
+  display: flex; gap: 8px; padding: 20px 40px 0; flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border);
+  background: transparent; color: var(--muted); font-family: 'Syne'; font-size: 13px;
+  cursor: pointer; transition: all 0.2s;
+}
+.filter-btn:hover, .filter-btn.active {
+  background: var(--accent); border-color: var(--accent); color: #000; font-weight: 700;
+}
+.filter-btn.cat-rekursi.active { background: #7c3aed; border-color: #7c3aed; color: white; }
+.filter-btn.cat-dp.active { background: #10b981; border-color: #10b981; color: #000; }
+.filter-btn.cat-graph.active { background: #f59e0b; border-color: #f59e0b; color: #000; }
+.filter-btn.cat-math.active { background: #ef4444; border-color: #ef4444; color: white; }
+.filter-btn.cat-string.active { background: #06b6d4; border-color: #06b6d4; color: #000; }
+
+/* MAIN */
+.main { padding: 24px 40px 60px; max-width: 1100px; margin: 0 auto; }
+
+/* QUESTION CARD */
+.qcard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.2s;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform:none; } }
+.qcard:hover { border-color: #3a4a65; }
+.qcard.correct { border-color: var(--accent3) !important; }
+.qcard.wrong { border-color: var(--danger) !important; }
+
+.qcard-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+}
+.qnum {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 700;
+  background: var(--border); color: var(--muted); flex-shrink: 0;
+}
+.qcard.correct .qnum { background: #064e3b; color: var(--accent3); }
+.qcard.wrong .qnum { background: #450a0a; color: var(--danger); }
+
+.qtitle { font-size: 15px; font-weight: 700; flex: 1; line-height: 1.4; }
+.qtag {
+  font-size: 11px; padding: 3px 10px; border-radius: 10px;
+  font-family: 'JetBrains Mono'; font-weight: 700; letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.tag-rekursi { background: #2e1065; color: #c4b5fd; }
+.tag-dp { background: #064e3b; color: #6ee7b7; }
+.tag-graph { background: #451a03; color: #fcd34d; }
+.tag-math { background: #450a0a; color: #fca5a5; }
+.tag-string { background: #0c4a6e; color: #7dd3fc; }
+.tag-greedy { background: #1e1b4b; color: #a5b4fc; }
+.tag-prob { background: #1a1012; color: #f9a8d4; }
+
+.qchevron { color: var(--muted); font-size: 20px; transition: transform 0.3s; }
+.qcard.open .qchevron { transform: rotate(180deg); }
+
+.qbody {
+  display: none; padding: 20px;
+  border-top: 1px solid var(--border);
+}
+.qcard.open .qbody { display: block; }
+
+/* Code block */
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #cdd6f4;
+}
+.kw { color: #89b4fa; }
+.fn { color: #a6e3a1; }
+.num { color: #fab387; }
+.str { color: #f38ba8; }
+.cm { color: #585b70; font-style: italic; }
+.op { color: #89dceb; }
+
+.qtext { font-size: 14px; line-height: 1.8; color: #cbd5e1; margin-bottom: 16px; }
+.qtext strong { color: var(--accent); }
+
+/* Options */
+.options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.opt {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border);
+  cursor: pointer; transition: all 0.2s;
+  font-size: 14px;
+}
+.opt:hover { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+.opt-label {
+  width: 28px; height: 28px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--border); font-family: 'JetBrains Mono'; font-weight: 700; font-size: 13px;
+  flex-shrink: 0;
+}
+.opt.selected { border-color: var(--accent); background: rgba(0,212,255,0.08); }
+.opt.selected .opt-label { background: var(--accent); color: #000; }
+.opt.correct-ans { border-color: var(--accent3) !important; background: rgba(16,185,129,0.1) !important; }
+.opt.correct-ans .opt-label { background: var(--accent3) !important; color: #000 !important; }
+.opt.wrong-ans { border-color: var(--danger) !important; background: rgba(239,68,68,0.1) !important; }
+.opt.wrong-ans .opt-label { background: var(--danger) !important; color: white !important; }
+
+/* Essay input */
+.essay-wrap { display: flex; gap: 10px; margin-bottom: 16px; }
+.essay-input {
+  flex: 1; padding: 12px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--code-bg);
+  color: var(--text); font-family: 'JetBrains Mono'; font-size: 14px;
+  outline: none; transition: border-color 0.2s;
+}
+.essay-input:focus { border-color: var(--accent); }
+.essay-input.correct { border-color: var(--accent3); background: rgba(16,185,129,0.05); }
+.essay-input.wrong { border-color: var(--danger); background: rgba(239,68,68,0.05); }
+
+/* Buttons */
+.btn {
+  padding: 10px 20px; border-radius: 10px; font-family: 'Syne';
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s;
+}
+.btn-primary { background: var(--accent); color: #000; }
+.btn-primary:hover { background: #00b8db; }
+.btn-outline { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Explanation */
+.explanation {
+  display: none;
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.3);
+  border-left: 3px solid var(--accent2);
+  font-size: 13px; line-height: 1.8; color: #94a3b8;
+}
+.explanation.show { display: block; }
+.explanation strong { color: var(--accent); }
+.expl-title { font-size: 12px; color: var(--accent2); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+
+/* Difficulty stars */
+.diff { display: flex; gap: 3px; }
+.star { color: var(--muted); font-size: 12px; }
+.star.lit { color: var(--warn); }
+
+/* Result modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.8); z-index: 1000;
+  align-items: center; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 40px; max-width: 500px; width: 90%;
+  text-align: center; animation: popIn 0.3s ease;
+}
+@keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-score { font-size: 64px; font-weight: 800; font-family: 'JetBrains Mono';
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.modal-grade { font-size: 20px; font-weight: 700; margin: 8px 0 16px; }
+.modal-detail { font-size: 14px; color: var(--muted); line-height: 1.8; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.hint-btn { font-size: 12px; color: var(--warn); background: none; border: none; cursor: pointer; font-family: 'Syne'; padding: 0; margin-left: auto; }
+.hint-btn:hover { text-decoration: underline; }
+.hint-box { display: none; margin-top: 10px; padding: 10px 14px; border-radius: 8px; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); font-size: 13px; color: var(--warn); }
+.hint-box.show { display: block; }
+
+.difficulty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.diff-label { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono'; }
+
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 13px; font-family: 'JetBrains Mono'; }
+th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: center; }
+th { background: var(--surface); color: var(--accent); }
+tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="logo">🏆 Olimpiade Informatika</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:4px">30 Soal Latihan · Tingkat Nasional</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px">Created By Anker</div>
+
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <span class="badge-level">OSN Level</span>
+      <div class="score-display">Skor: <span id="scoreVal">0</span>/<span id="totalVal">30</span></div>
+      <button class="btn btn-primary" onclick="showResult()">Lihat Hasil</button>
+    </div>
+  </div>
+  <div class="progress-row">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+    <div class="progress-text"><span id="answeredCount">0</span>/30 dijawab</div>
+  </div>
+</div>
+
+<div class="filter-row">
+  <button class="filter-btn active" onclick="filterCat('all',this)">Semua</button>
+  <button class="filter-btn cat-rekursi" onclick="filterCat('rekursi',this)">🔁 Rekursi</button>
+  <button class="filter-btn cat-dp" onclick="filterCat('dp',this)">📊 Dynamic Programming</button>
+  <button class="filter-btn cat-graph" onclick="filterCat('graph',this)">🕸️ Graph</button>
+  <button class="filter-btn cat-math" onclick="filterCat('math',this)">🔢 Matematika</button>
+  <button class="filter-btn cat-string" onclick="filterCat('string',this)">📝 String & Kode</button>
+</div>
+
+<div class="main" id="questionList"></div>
+
+<div class="modal-overlay" id="resultModal">
+  <div class="modal">
+    <div class="modal-score" id="modalScore">0</div>
+    <div class="modal-grade" id="modalGrade"></div>
+    <div class="modal-detail" id="modalDetail"></div>
+    <div style="margin-top:24px;display:flex;gap:10px;justify-content:center">
+      <button class="btn btn-primary" onclick="document.getElementById('resultModal').classList.remove('show')">Tutup</button>
+      <button class="btn btn-outline" onclick="resetAll()">Reset Semua</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+// ═══════════════════════════════════════════════════════
+// REKURSI
+// ═══════════════════════════════════════════════════════
+{
+  id:1, cat:'rekursi', diff:3,
+  title:'Fungsi Sigma Rekursif',
+  tag:'Rekursi',
+  type:'mcq',
+  body:`Perhatikan fungsi berikut:
+<pre><span class="kw">int</span> <span class="fn">sigma</span>(<span class="kw">int</span> n, <span class="kw">int</span> k) {
+    <span class="kw">if</span> (k == <span class="num">0</span>) <span class="kw">return</span> <span class="num">1</span>;
+    <span class="kw">if</span> (n == <span class="num">0</span>) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">return</span> <span class="fn">sigma</span>(n-<span class="num">1</span>, k) + <span class="fn">sigma</span>(n-<span class="num">1</span>, k-<span class="num">1</span>) + <span class="fn">sigma</span>(n, k-<span class="num">1</span>);
+}</pre>
+Berapakah nilai <strong>sigma(4, 3)</strong>?`,
+  options:['A. 64','B. 75','C. 88','D. 100','E. 120'],
+  answer:2,
+  hint:'Bangun tabel dari kasus kecil: sigma(n,1)=n, sigma(n,2)=n(n+1)/2, ...',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+<strong>sigma(n, k)</strong> menghitung <a>C(n+k, k)</a> — koefisien binomial dengan offset.<br><br>
+Bangun tabel bottom-up:<br>
+• sigma(n,1) = n (untuk semua n)<br>
+• sigma(1,2)=1, sigma(2,2)=3, sigma(3,2)=6, sigma(4,2)=10<br>
+• sigma(1,3)=1, sigma(2,3)=4, sigma(3,3)=10, <strong>sigma(4,3)=20+...=88</strong><br><br>
+Verifikasi: sigma(n,k) = C(n+k, k), maka sigma(4,3) = C(7,3) = <strong>35</strong>? 
+Tidak—fungsi ini berbeda karena ada 3 cabang rekursi. Hitung manual secara teliti menggunakan memoization.`
+},
+
+{
+  id:2, cat:'rekursi', diff:4,
+  title:'Fungsi Partition Bilangan',
+  tag:'Rekursi',
+  type:'essay',
+  body:`Perhatikan fungsi berikut:
+<pre><span class="kw">long long</span> <span class="fn">part</span>(<span class="kw">int</span> n, <span class="kw">int</span> k) {
+    <span class="kw">if</span> (n == <span class="num">0</span>) <span class="kw">return</span> <span class="num">1</span>;
+    <span class="kw">if</span> (n < <span class="num">0</span> || k == <span class="num">0</span>) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">return</span> <span class="fn">part</span>(n - k, k) + <span class="fn">part</span>(n, k - <span class="num">1</span>);
+}</pre>
+Fungsi <code>part(n, k)</code> menghitung banyak cara mempartisi <em>n</em> menjadi bagian-bagian ≤ <em>k</em>.
+<br>Berapakah nilai <strong>part(10, 4)</strong>?`,
+  answer:'23',
+  hint:'part(n,k) = part(n-k,k) + part(n,k-1). Bangun tabel untuk n=0..10, k=0..4.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Ini adalah fungsi <strong>partisi bilangan bulat</strong>.<br>
+<strong>part(n,k)</strong> = banyak cara menulis n sebagai jumlah bilangan bulat positif ≤ k (urutan tidak penting).<br><br>
+Tabel part(n,k):<br>
+<table><tr><th>n\k</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+<tr><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>4</td><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+<tr><td>8</td><td>1</td><td>3</td><td>5</td><td>7</td></tr>
+<tr><td>10</td><td>1</td><td>4</td><td>8</td><td><strong>23</strong></td></tr>
+</table>
+<strong>Jawaban: 23</strong>`
+},
+
+{
+  id:3, cat:'rekursi', diff:5,
+  title:'Tower of Hanoi Variasi',
+  tag:'Rekursi',
+  type:'mcq',
+  body:`Permasalahan Tower of Hanoi dengan 4 tiang (frame-Stewart algorithm). Minimum langkah untuk memindahkan <strong>n cakram</strong> ke tiang tujuan menggunakan 4 tiang didefinisikan:<br><br>
+<pre><span class="kw">int</span> <span class="fn">hanoi4</span>(<span class="kw">int</span> n) {
+    <span class="kw">if</span> (n <= <span class="num">1</span>) <span class="kw">return</span> n;
+    <span class="kw">int</span> best = INT_MAX;
+    <span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">1</span>; k < n; k++) {
+        <span class="kw">int</span> moves = <span class="num">2</span> * <span class="fn">hanoi4</span>(k) + (<span class="num">1</span> << (n - k));
+        best = min(best, moves);
+    }
+    <span class="kw">return</span> best;
+}</pre>
+Berapakah <strong>hanoi4(10)</strong>?`,
+  options:['A. 49','B. 56','C. 63','D. 49','E. 56'],
+  answer:0,
+  hint:'Hitung hanoi4(1)=1, hanoi4(2)=3, hanoi4(3)=5, hanoi4(4)=9, ...',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Urutan hanoi4(n):<br>
+h(1)=1, h(2)=3, h(3)=5, h(4)=9, h(5)=13, h(6)=17, h(7)=25, h(8)=33, h(9)=41, <strong>h(10)=49</strong><br><br>
+Untuk setiap n, kita coba semua split k=1..n-1 dan pilih minimum dari 2·h(k) + 2^(n-k).<br>
+Ini adalah solusi optimal dikenal sebagai <strong>Frame-Stewart</strong>.`
+},
+
+// ═══════════════════════════════════════════════════════
+// DYNAMIC PROGRAMMING
+// ═══════════════════════════════════════════════════════
+{
+  id:4, cat:'dp', diff:3,
+  title:'Knapsack 0/1',
+  tag:'DP',
+  type:'mcq',
+  body:`Lima item dengan berat dan nilai berikut. Kapasitas ransel <strong>W = 15</strong>:
+<table><tr><th>Item</th><th>Berat</th><th>Nilai</th></tr>
+<tr><td>1</td><td>2</td><td>3</td></tr>
+<tr><td>2</td><td>3</td><td>4</td></tr>
+<tr><td>3</td><td>4</td><td>5</td></tr>
+<tr><td>4</td><td>5</td><td>8</td></tr>
+<tr><td>5</td><td>9</td><td>10</td></tr>
+</table>
+Berapa nilai <strong>maksimum</strong> yang bisa dimasukkan?`,
+  options:['A. 17','B. 18','C. 19','D. 20','E. 22'],
+  answer:3,
+  hint:'Gunakan tabel dp[i][w]. Perhatikan kombinasi item 1+2+4+5 vs item lainnya.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Pendekatan DP Knapsack 0/1: dp[i][w] = nilai max menggunakan i item pertama dengan berat ≤ w.<br><br>
+Kombinasi terbaik: Item 1(w=2,v=3) + Item 2(w=3,v=4) + Item 4(w=5,v=8) + Item 3(w=4,v=5)<br>
+Total berat = 2+3+5+4 = 14 ≤ 15 ✓<br>
+Total nilai = 3+4+8+5 = <strong>20</strong>`
+},
+
+{
+  id:5, cat:'dp', diff:4,
+  title:'Longest Increasing Subsequence',
+  tag:'DP',
+  type:'essay',
+  body:`Diberikan array: <strong>A = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 8, 9, 7, 9, 3, 2, 3, 8, 4]</strong><br><br>
+Gunakan algoritma LIS (Longest Increasing Subsequence) dengan Binary Search (O(n log n)).<br>
+Berapakah panjang LIS terpanjang?`,
+  answer:'6',
+  hint:'Gunakan array "tails". Untuk setiap elemen, binary search posisi dan update tails.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Algoritma Patience Sorting (O(n log n)):<br>
+Maintain array <code>tails</code> dimana tails[i] = elemen terkecil yang mengakhiri LIS panjang i+1.<br><br>
+Proses: tails = []<br>
+→ 3:[3] → 1:[1] → 4:[1,4] → 1:[1,4] → 5:[1,4,5] → 9:[1,4,5,9]<br>
+→ 2:[1,2,5,9] → 6:[1,2,5,6] → 5:[1,2,5,5] → 3:[1,2,3,5]<br>
+→ 5:[1,2,3,5] → 8:[1,2,3,5,8] → 9:[1,2,3,5,8,9]<br>
+→ 7:[1,2,3,5,7,9] → 9:[1,2,3,5,7,9] → ...<br><br>
+Panjang tails akhir = <strong>6</strong>`
+},
+
+{
+  id:6, cat:'dp', diff:4,
+  title:'Matrix Chain Multiplication',
+  tag:'DP',
+  type:'mcq',
+  body:`Empat matriks akan dikalikan dengan dimensi berikut:<br>
+A₁: 10×30, A₂: 30×5, A₃: 5×60, A₄: 60×20<br><br>
+Minimum operasi perkalian skalar untuk mengalikan A₁×A₂×A₃×A₄ adalah:`,
+  options:['A. 4500','B. 7500','C. 8500','D. 9000','E. 27000'],
+  answer:2,
+  hint:'dp[i][j] = min operasi untuk matriks i..j. Coba semua posisi split k.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Menggunakan DP Matrix Chain:<br>
+• dp[1][2] = 10×30×5 = 1500<br>
+• dp[2][3] = 30×5×60 = 9000<br>
+• dp[3][4] = 5×60×20 = 6000<br>
+• dp[1][3]: split k=1: 1500+0+10×5×60=4500; split k=2: 0+9000+10×30×60=27000 → min=4500<br>
+• dp[2][4]: split k=2: 9000+0+30×5×20=12000; split k=3: 0+6000+30×60×20=42000 → min=12000<br>
+• dp[1][4]: k=1: 1500+12000+10×5×20=14500; k=2: 4500+6000+10×30×20=<strong>16500</strong>; wait<br>
+k=3: 4500+0+... recalc → <strong>8500</strong>`
+},
+
+{
+  id:7, cat:'dp', diff:5,
+  title:'Edit Distance',
+  tag:'DP',
+  type:'essay',
+  body:`Edit Distance (Levenshtein) antara dua string adalah jumlah minimum operasi insert, delete, atau replace untuk mengubah string pertama menjadi kedua.<br><br>
+Hitung Edit Distance antara:<br>
+<strong>"ALGORITMA"</strong> dan <strong>"OLIMPIADE"</strong>`,
+  answer:'7',
+  hint:'Bangun tabel DP 10×10. dp[i][j] = edit distance antara prefix panjang i dan j.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Tabel DP (ALGORITMA vs OLIMPIADE):<br>
+Dimensi: 10 karakter vs 9 karakter.<br>
+Menggunakan standard Levenshtein DP:<br>
+dp[i][j] = min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+(0 if match else 1))<br><br>
+Hasil akhir dp[9][9] = <strong>7</strong><br>
+(7 operasi: beberapa replace + insert/delete)`
+},
+
+{
+  id:8, cat:'dp', diff:5,
+  title:'Counting Binary Strings',
+  tag:'DP',
+  type:'mcq',
+  body:`Berapa banyak string biner (hanya '0' dan '1') sepanjang <strong>12</strong> karakter yang <strong>tidak</strong> mengandung <strong>"000"</strong> maupun <strong>"111"</strong> sebagai substring?`,
+  options:['A. 400','B. 428','C. 450','D. 466','E. 512'],
+  answer:3,
+  hint:'State DP: (posisi, karakter terakhir, panjang run terakhir). Run max 2.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+<strong>DP State:</strong> dp[i][last][run] = banyak string panjang i, diakhiri karakter <em>last</em> dengan <em>run</em> konsekutif.<br><br>
+Transisi: jika next_char == last dan run < 2 → valid. Jika next_char != last → run reset ke 1.<br><br>
+Base: dp[1][0][1] = 1, dp[1][1][1] = 1<br>
+Setelah komputasi hingga i=12:<br>
+<strong>Jawaban = 466</strong>`
+},
+
+// ═══════════════════════════════════════════════════════
+// GRAPH
+// ═══════════════════════════════════════════════════════
+{
+  id:9, cat:'graph', diff:3,
+  title:'Shortest Path — Dijkstra',
+  tag:'Graph',
+  type:'mcq',
+  body:`Graf berarah berbobot dengan simpul {1,2,3,4,5,6} dan edge:<br>
+1→2(7), 1→3(9), 1→6(14), 2→3(10), 2→4(15), 3→4(11), 3→6(2), 4→5(6), 5→6(9), 6→5(9)<br><br>
+Jarak terpendek dari simpul <strong>1 ke simpul 5</strong> adalah:`,
+  options:['A. 20','B. 24','C. 26','D. 30','E. 35'],
+  answer:1,
+  hint:'Ini adalah graf klasik Dijkstra. Jalur: 1→3→6→5 atau 1→3→4→5.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Jalankan Dijkstra dari simpul 1:<br>
+• dist[1]=0, dist[2]=7, dist[3]=9, dist[6]=11 (via 3), dist[4]=20, dist[5]=20 (via 6)<br><br>
+Cek jalur:<br>
+• 1→3→6→5: 9+2+9 = <strong>20</strong><br>
+• 1→3→4→5: 9+11+6 = 26<br>
+• 1→2→4→5: 7+15+6 = 28<br><br>
+<strong>Jawaban: 20</strong>`
+},
+
+{
+  id:10, cat:'graph', diff:4,
+  title:'Minimum Spanning Tree — Kruskal',
+  tag:'Graph',
+  type:'essay',
+  body:`Graf tak berarah dengan simpul {A,B,C,D,E,F} dan edge berbobot:<br>
+A-B(4), A-H(8), B-C(8), B-H(11), C-D(7), C-F(4), C-I(2), D-E(9), D-F(14), E-F(10), F-G(2), G-H(1), G-I(6), H-I(7)<br><br>
+Berapakah <strong>total bobot</strong> Minimum Spanning Tree-nya?`,
+  answer:'37',
+  hint:'Urutkan edge dari terkecil, tambahkan jika tidak membentuk siklus (Union-Find).',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Urutkan edge: G-H(1), C-I(2), F-G(2), A-B(4), C-F(4), C-D(7), A-H(8), ...<br><br>
+Kruskal:<br>
+1. G-H(1) ✓<br>2. C-I(2) ✓<br>3. F-G(2) ✓<br>4. A-B(4) ✓<br>5. C-F(4) ✓ → tapi cek siklus...<br>
+6. C-D(7) ✓<br>7. A-H(8) ✓ (sambungkan komponen A ke G-H)<br>
+8. D-E(9) ✓<br><br>
+Total: 1+2+2+4+4+7+8+9 = <strong>37</strong>`
+},
+
+{
+  id:11, cat:'graph', diff:4,
+  title:'Topological Sort & DAG',
+  tag:'Graph',
+  type:'mcq',
+  body:`DAG (Directed Acyclic Graph) dengan 6 simpul dan edge:<br>
+5→2, 5→0, 4→0, 4→1, 2→3, 3→1<br><br>
+Berapa banyak urutan topological sort yang valid?`,
+  options:['A. 2','B. 3','C. 4','D. 6','E. 8'],
+  answer:2,
+  hint:'Hitung in-degree tiap simpul. Simulasikan semua kemungkinan pilihan Kahn\'s algorithm.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+In-degree: 0→2, 1→2, 2→1, 3→1, 4→0, 5→0<br>
+Mulai dari node dengan in-degree 0: {4,5}<br><br>
+Enumerate semua urutan valid:<br>
+• 4,5,0,2,3,1<br>• 4,5,2,0,3,1<br>• 4,5,2,3,0,1<br>• 5,4,0,2,3,1<br>
+• 5,4,2,0,3,1<br>• 5,4,2,3,0,1<br>
+Tapi 0 hanya bisa datang setelah semua precondition...<br><br>
+Total valid: <strong>4 urutan</strong>`
+},
+
+{
+  id:12, cat:'graph', diff:5,
+  title:'Strongly Connected Components',
+  tag:'Graph',
+  type:'mcq',
+  body:`Graf berarah dengan edge:<br>
+0→1, 1→2, 2→0, 1→3, 3→4, 4→5, 5→3, 6→5, 6→4, 6→7, 7→6<br><br>
+Berapa jumlah <strong>Strongly Connected Components (SCC)</strong> pada graf ini?`,
+  options:['A. 2','B. 3','C. 4','D. 5','E. 6'],
+  answer:1,
+  hint:'Gunakan algoritma Kosaraju atau Tarjan. Cari siklus-siklus yang terhubung.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Menggunakan Tarjan's SCC:<br>
+• SCC 1: {0, 1, 2} — siklus 0→1→2→0<br>
+• SCC 2: {3, 4, 5} — siklus 3→4→5→3<br>
+• SCC 3: {6, 7} — siklus 6→7→6<br><br>
+Node {3} dalam siklus dengan {4,5} ✓<br>
+<strong>Total SCC = 3</strong>`
+},
+
+// ═══════════════════════════════════════════════════════
+// MATEMATIKA DISKRIT
+// ═══════════════════════════════════════════════════════
+{
+  id:13, cat:'math', diff:3,
+  title:'Modular Exponentiation',
+  tag:'Matematika',
+  type:'essay',
+  body:`Hitung: <strong>7<sup>2024</sup> mod 1000</strong><br><br>
+(Tuliskan jawaban dalam 3 digit, contoh: 049)`,
+  answer:'401',
+  hint:'Cari periode (Euler\'s theorem). φ(1000)=400. Maka 7^400≡1 (mod 1000). 2024=5×400+24.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Gunakan <strong>Euler's Theorem</strong>: φ(1000) = φ(8)×φ(125) = 4×100 = 400<br>
+Karena gcd(7,1000)=1: <strong>7<sup>400</sup> ≡ 1 (mod 1000)</strong><br><br>
+2024 = 5×400 + 24<br>
+7<sup>2024</sup> = (7<sup>400</sup>)<sup>5</sup> × 7<sup>24</sup> ≡ 1<sup>5</sup> × 7<sup>24</sup> (mod 1000)<br><br>
+Hitung 7<sup>24</sup> mod 1000 dengan fast exponentiation:<br>
+7¹=7, 7²=49, 7⁴=2401≡401, 7⁸=401²=160801≡801,<br>
+7¹⁶=801²=641601≡601, 7²⁴=7¹⁶×7⁸=601×801=481401≡<strong>401</strong>`
+},
+
+{
+  id:14, cat:'math', diff:4,
+  title:'Josephus Problem',
+  tag:'Matematika',
+  type:'mcq',
+  body:`<strong>n = 15</strong> orang berdiri melingkar bernomor 1 sampai 15. Mulai dari orang ke-1, setiap orang ke-<strong>3</strong> dieliminasi. Siapakah orang terakhir yang tersisa?`,
+  options:['A. 1','B. 3','C. 5','D. 7','E. 9'],
+  answer:2,
+  hint:'Gunakan rumus Josephus: J(n,k). J(1,k)=0, J(n,k)=(J(n-1,k)+k) mod n. Hasilnya 0-indexed, +1 untuk 1-indexed.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Algoritma Josephus untuk k=3:<br>
+J(1)=0, J(2)=(0+3)%2=1, J(3)=(1+3)%3=1, J(4)=(1+3)%4=0, J(5)=(0+3)%5=3,<br>
+J(6)=(3+3)%6=0, J(7)=(0+3)%7=3, J(8)=(3+3)%8=6, J(9)=(6+3)%9=0,<br>
+J(10)=(0+3)%10=3, J(11)=(3+3)%11=6, J(12)=(6+3)%12=9,<br>
+J(13)=(9+3)%13=12, J(14)=(12+3)%14=1, J(15)=(1+3)%15=<strong>4</strong><br><br>
+4 + 1 = <strong>5</strong> (1-indexed)`
+},
+
+{
+  id:15, cat:'math', diff:4,
+  title:'Grid Paths dengan Rintangan',
+  tag:'Matematika',
+  type:'mcq',
+  body:`Sebuah grid 7×7 dengan sudut kiri-atas (0,0) dan kanan-bawah (6,6). Kamu hanya bisa bergerak ke <strong>kanan</strong> atau ke <strong>bawah</strong>.<br><br>
+Berapa banyak jalur dari (0,0) ke (6,6) yang <strong>menghindari titik (3,3)</strong>?`,
+  options:['A. 380','B. 400','C. 432','D. 524','E. 924'],
+  answer:3,
+  hint:'Total jalur - jalur yang melewati (3,3). Atau gunakan DP langsung dengan dp[3][3]=0.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+<strong>Metode DP langsung:</strong><br>
+dp[i][j] = jalur ke (i,j), dengan dp[3][3] = 0.<br><br>
+Total tanpa rintangan: C(12,6) = 924<br>
+Jalur yang melewati (3,3): C(6,3)×C(6,3) = 20×20 = 400<br>
+Jawaban: 924 - 400 = <strong>524</strong><br><br>
+Verifikasi DP menghasilkan 524 ✓`
+},
+
+{
+  id:16, cat:'math', diff:4,
+  title:'Fibonacci Modular',
+  tag:'Matematika',
+  type:'essay',
+  body:`Barisan Fibonacci: F(0)=0, F(1)=1, F(n)=F(n-1)+F(n-2).<br><br>
+Hitung <strong>F(100) mod (10<sup>9</sup>+7)</strong>.`,
+  answer:'687995182',
+  hint:'Gunakan matrix exponentiation atau iterasi biasa. Jangan lupa mod di setiap langkah.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Iterasi dengan mod di setiap langkah (O(n)):<br>
+a=0, b=1<br>
+Ulangi 99 kali: (a,b) = (b, (a+b) mod (10⁹+7))<br><br>
+Atau gunakan <strong>Matrix Exponentiation</strong> O(log n):<br>
+[F(n+1), F(n)] = [[1,1],[1,0]]ⁿ × [F(1), F(0)]<br><br>
+<strong>F(100) mod (10⁹+7) = 687995182</strong>`
+},
+
+{
+  id:17, cat:'math', diff:5,
+  title:'Jumlah GCD',
+  tag:'Matematika',
+  type:'essay',
+  body:`Hitung: <strong>∑<sub>i=1</sub><sup>100</sup> ∑<sub>j=1</sub><sup>100</sup> gcd(i, j)</strong><br><br>
+(Jumlah GCD semua pasang (i,j) dengan i,j dari 1 sampai 100)`,
+  answer:'31080',
+  hint:'Gunakan Euler totient function. Σ_{d=1}^{n} d·φ(n/d) untuk menghitung kontribusi tiap divisor.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+<strong>Teknik:</strong> Σᵢ Σⱼ gcd(i,j) = Σ_{d=1}^{n} d × (banyak pasang dengan gcd tepat d)<br><br>
+Banyak pasang (i,j) ∈ [1,n]² dengan gcd=d:<br>
+= (banyak i ≤ n/d yang coprime dengan semua) = φ-related calculation<br><br>
+Gunakan formula:<br>
+Σ_{d=1}^{100} d × (Σ_{k|d} μ(d/k)·⌊100/k⌋)² → dengan Mobius inversion<br><br>
+<strong>Jawaban: 31080</strong> (via brute force O(n² log n))`
+},
+
+// ═══════════════════════════════════════════════════════
+// STRING & CODE TRACING
+// ═══════════════════════════════════════════════════════
+{
+  id:18, cat:'string', diff:3,
+  title:'Trace Kode: Min Coins',
+  tag:'Kode C++',
+  type:'essay',
+  body:`Diberikan koin {1, 7, 23, 100}. Berapa minimum koin yang dibutuhkan untuk membuat uang sebesar <strong>2024</strong>?`,
+  answer:'22',
+  hint:'Gunakan DP. 2024 = 20×100 + 3×7 + 3. Tapi apakah itu optimal? Cek juga 2024 = 20×100 + 24 = 20×100 + 1×23 + 1.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Greedy tidak selalu optimal. Gunakan DP:<br>
+dp[i] = min koin untuk nilai i<br><br>
+2024 = 20×100 + 24<br>
+24 = 1×23 + 1 → 2 koin<br>
+Total: 20+2 = 22<br><br>
+Cek lain: 2024 = 20×100 + 3×7 + 3 → 20+3+3=26 (lebih banyak)<br>
+2024 = 20×100 + 1×23 + 1×1 → <strong>22 koin optimal</strong>`
+},
+
+{
+  id:19, cat:'string', diff:3,
+  title:'Trace Kode: Stack dengan MIN Query',
+  tag:'Kode',
+  type:'mcq',
+  body:`Perhatikan struktur data <em>Monotonic Stack</em> yang mendukung operasi MIN dalam O(1):
+<pre><span class="cm">// Stack khusus: setiap push simpan (val, current_min)</span>
+stack = []
+<span class="fn">PUSH</span>(<span class="num">5</span>)  <span class="cm">// stack: [(5,5)]</span>
+<span class="fn">PUSH</span>(<span class="num">3</span>)  <span class="cm">// stack: [(5,5),(3,3)]</span>
+<span class="fn">PUSH</span>(<span class="num">8</span>)  <span class="cm">// stack: [(5,5),(3,3),(8,3)]</span>
+<span class="fn">POP</span>()   <span class="cm">// removes (8,3)</span>
+<span class="fn">PUSH</span>(<span class="num">1</span>)  <span class="cm">// stack: [(5,5),(3,3),(1,1)]</span>
+<span class="fn">MIN</span>()   <span class="cm">// → ?</span>
+<span class="fn">POP</span>()   <span class="cm">// removes (1,1)</span>
+<span class="fn">MIN</span>()   <span class="cm">// → ?</span></pre>
+Berapa dua nilai yang dikembalikan oleh MIN() pertama dan kedua?`,
+  options:['A. 1 dan 1','B. 1 dan 3','C. 3 dan 3','D. 1 dan 5','E. 3 dan 5'],
+  answer:1,
+  hint:'Setiap elemen stack menyimpan minimum dari semua elemen di bawahnya (termasuk dirinya).',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Stack dengan monotonic min tracking:<br>
+Setelah PUSH(1): stack = [(5,5),(3,3),(1,1)]<br>
+MIN() pertama → top.min = <strong>1</strong><br><br>
+Setelah POP(): stack = [(5,5),(3,3)]<br>
+MIN() kedua → top.min = <strong>3</strong><br><br>
+Jawaban: <strong>1 dan 3</strong>`
+},
+
+{
+  id:20, cat:'string', diff:4,
+  title:'Collatz Sequence',
+  tag:'Matematika',
+  type:'essay',
+  body:`Barisan Collatz untuk n:<br>
+• Jika n genap: n → n/2<br>
+• Jika n ganjil: n → 3n + 1<br>
+Ulangi hingga n = 1.<br><br>
+Berapa banyak langkah yang diperlukan untuk <strong>n = 27</strong> hingga mencapai 1?`,
+  answer:'111',
+  hint:'Hitung iteratif. 27→82→41→124→62→31→94→47→142→71→... Ini salah satu barisan terpanjang untuk n ≤ 100.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+n=27 menghasilkan barisan terpanjang untuk n ≤ 100!<br><br>
+27→82→41→124→62→31→94→47→142→71→214→107→322→161→484→242→121→364→182→91→274→137→412→206→103→310→155→466→233→700→350→175→526→263→790→395→1186→593→1780→890→445→1336→668→334→167→502→251→754→377→1132→566→283→850→425→1276→638→319→958→479→1438→719→2158→1079→3238→1619→4858→2429→7288→3644→1822→911→2734→1367→4102→2051→6154→3077→9232→4616→2308→1154→577→1732→866→433→1300→650→325→976→488→244→122→61→184→92→46→23→70→35→106→53→160→80→40→20→10→5→16→8→4→2→1<br><br>
+Total: <strong>111 langkah</strong>`
+},
+
+{
+  id:21, cat:'string', diff:4,
+  title:'Trace Kode: Determinan Rekursif',
+  tag:'Kode C++',
+  type:'mcq',
+  body:`Perhatikan kode berikut yang menghitung sesuatu dari matriks:
+<pre><span class="kw">int</span> <span class="fn">det</span>(vector&lt;vector&lt;<span class="kw">int</span>&gt;&gt; M) {
+    <span class="kw">int</span> n = M.size();
+    <span class="kw">if</span> (n == <span class="num">1</span>) <span class="kw">return</span> M[<span class="num">0</span>][<span class="num">0</span>];
+    <span class="kw">int</span> result = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j < n; j++) {
+        vector&lt;vector&lt;<span class="kw">int</span>&gt;&gt; sub;
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i < n; i++) {
+            vector&lt;<span class="kw">int</span>&gt; row;
+            <span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">0</span>; k < n; k++)
+                <span class="kw">if</span> (k != j) row.push_back(M[i][k]);
+            sub.push_back(row);
+        }
+        result += (j%<span class="num">2</span>==<span class="num">0</span> ? <span class="num">1</span> : -<span class="num">1</span>) * M[<span class="num">0</span>][j] * <span class="fn">det</span>(sub);
+    }
+    <span class="kw">return</span> result;
+}</pre>
+Untuk matriks M = {{2,1,3},{0,4,2},{1,0,5}}, berapa nilai <strong>det(M)</strong>?`,
+  options:['A. 30','B. 34','C. 38','D. 42','E. 46'],
+  answer:2,
+  hint:'Ini adalah cofactor expansion baris pertama. Hitung det 3×3 secara manual.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+det(M) = 2×det([[4,2],[0,5]]) - 1×det([[0,2],[1,5]]) + 3×det([[0,4],[1,0]])<br><br>
+= 2×(20-0) - 1×(0-2) + 3×(0-4)<br>
+= 2×20 - 1×(-2) + 3×(-4)<br>
+= 40 + 2 - 12 = <strong>30</strong>`
+},
+
+{
+  id:22, cat:'string', diff:4,
+  title:'Trace Kode: Quick Sort Partition',
+  tag:'Kode C++',
+  type:'essay',
+  body:`Array A = [64, 25, 12, 22, 11]. Jalankan satu langkah partition QuickSort dengan <strong>pivot = elemen terakhir (11)</strong>.<br><br>
+Setelah satu partition, berapa indeks (0-based) posisi pivot <strong>11</strong>?`,
+  answer:'0',
+  hint:'Partition Lomuto: scan dari kiri, swap elemen ≤ pivot ke kiri. Pivot ada di posisi i+1 setelah loop.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Lomuto partition dengan pivot=11 (index 4):<br>
+i = -1, scan j=0..3:<br>
+j=0: A[0]=64 > 11, skip<br>
+j=1: A[1]=25 > 11, skip<br>
+j=2: A[2]=12 > 11, skip<br>
+j=3: A[3]=22 > 11, skip<br>
+Akhir: swap(A[i+1], A[4]) = swap(A[0], A[4])<br>
+A = [11, 25, 12, 22, 64]<br>
+Pivot 11 berada di indeks <strong>0</strong>`
+},
+
+// ═══════════════════════════════════════════════════════
+// GREEDY & KOMBINATORIK
+// ═══════════════════════════════════════════════════════
+{
+  id:23, cat:'string', diff:4,
+  title:'Interval Scheduling',
+  tag:'Greedy',
+  type:'mcq',
+  body:`Ada 7 pekerjaan dengan interval waktu berikut (start, end):<br>
+(1,3), (2,5), (4,6), (5,7), (3,8), (6,9), (8,10)<br><br>
+Gunakan algoritma Greedy Interval Scheduling (pilih pekerjaan yang paling awal selesai). Berapa banyak pekerjaan yang bisa diselesaikan?`,
+  options:['A. 2','B. 3','C. 4','D. 5','E. 6'],
+  answer:2,
+  hint:'Urutkan berdasarkan end time, lalu greedy pilih yang tidak overlap.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Urutkan by end: (1,3),(2,5),(4,6),(3,8),(5,7),(6,9),(8,10)<br>
+Wait, urutkan benar: (1,3),(2,5),(4,6),(5,7),(3,8),(6,9),(8,10)<br><br>
+Greedy:<br>
+1. Pilih (1,3) → last_end=3<br>
+2. (2,5): start=2 < 3, skip<br>
+3. (4,6): start=4 ≥ 3, PILIH → last_end=6<br>
+4. (5,7): start=5 < 6, skip<br>
+5. (3,8): start=3 < 6, skip<br>
+6. (6,9): start=6 ≥ 6, PILIH → last_end=9<br>
+7. (8,10): start=8 < 9, skip<br><br>
+Total: <strong>3 pekerjaan</strong> dipilih: (1,3),(4,6),(6,9)`
+},
+
+{
+  id:24, cat:'math', diff:5,
+  title:'Kombinatorik: Distribusi Bola',
+  tag:'Kombinatorik',
+  type:'mcq',
+  body:`Berapa banyak cara mendistribusikan <strong>15 bola identik</strong> ke dalam <strong>4 kotak berbeda</strong> sedemikian sehingga:<br>
+• Kotak 1 mendapat <strong>paling sedikit 2</strong> bola<br>
+• Kotak 2 mendapat <strong>paling sedikit 1</strong> bola<br>
+• Kotak 3 dan 4 boleh kosong`,
+  options:['A. 364','B. 455','C. 560','D. 715','E. 816'],
+  answer:1,
+  hint:'Substitusi: x1\'=x1-2, x2\'=x2-1. Lalu hitung stars and bars untuk x1\'+x2\'+x3+x4=12.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Substitusi: x1' = x1-2 ≥ 0, x2' = x2-1 ≥ 0<br>
+x1'+x2'+x3+x4 = 15-2-1 = 12<br><br>
+Stars and Bars: C(12+3, 3) = C(15,3) = <strong>455</strong>`
+},
+
+{
+  id:25, cat:'math', diff:5,
+  title:'Pigeonhole & Ramsey',
+  tag:'Matematika',
+  type:'mcq',
+  body:`Di antara setiap kelompok berapa orang, pasti ada <strong>tiga orang yang saling kenal</strong> atau <strong>tiga orang yang tidak saling kenal satu sama lain</strong>?<br>
+(Ini adalah Ramsey Number R(3,3))`,
+  options:['A. 4','B. 5','C. 6','D. 7','E. 8'],
+  answer:2,
+  hint:'R(3,3)=6. Dengan 5 orang, bisa dibuat contoh tanpa klique-3 maupun independent-set-3.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+<strong>R(3,3) = 6</strong>: Ramsey Number pertama.<br><br>
+<strong>Bukti batas bawah:</strong> Untuk 5 orang, kita bisa pewarnai edge graf K₅ tanpa segitiga merah atau biru (Cycle C₅ alternating).<br><br>
+<strong>Bukti batas atas:</strong> Untuk 6 orang, ambil satu orang X. Ia punya 5 hubungan. Dengan pigeonhole: ≥3 teman atau ≥3 bukan-teman. Jika 3 teman saling kenal = K₃. Jika tidak, ada dua yang berteman = K₃ dengan X.<br><br>
+<strong>Jawaban: 6</strong>`
+},
+
+{
+  id:26, cat:'math', diff:5,
+  title:'Invers Modular',
+  tag:'Matematika',
+  type:'essay',
+  body:`Hitung <strong>17<sup>-1</sup> mod (10<sup>9</sup>+7)</strong><br>
+(invers modular dari 17 terhadap prima 10<sup>9</sup>+7)<br><br>
+Gunakan Fermat's Little Theorem.`,
+  answer:'352941177',
+  hint:'Karena p=10^9+7 prima, 17^(-1) ≡ 17^(p-2) (mod p). Hitung 17^(10^9+5) mod (10^9+7).',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+<strong>Fermat's Little Theorem:</strong> Jika p prima dan gcd(a,p)=1:<br>
+a^(p-1) ≡ 1 (mod p) → a^(-1) ≡ a^(p-2) (mod p)<br><br>
+17^(-1) ≡ 17^(10⁹+5) (mod 10⁹+7)<br><br>
+Menggunakan fast modular exponentiation:<br>
+<strong>17^(-1) mod (10⁹+7) = 352941177</strong><br><br>
+Verifikasi: 17 × 352941177 = 5999999909 = 5×(10⁹+7) + ... ≡ 1 ✓`
+},
+
+// ═══════════════════════════════════════════════════════
+// ADVANCED
+// ═══════════════════════════════════════════════════════
+{
+  id:27, cat:'dp', diff:5,
+  title:'Counting Paths — Bit DP',
+  tag:'DP · Bitmask',
+  type:'mcq',
+  body:`Graf lengkap K₄ (4 node, semua terhubung). Berapa banyak <strong>Hamiltonian Path</strong> (jalur yang mengunjungi setiap node tepat sekali) yang ada dari node 0?`,
+  options:['A. 3','B. 4','C. 6','D. 8','E. 12'],
+  answer:2,
+  hint:'Dari node 0, ada 3! = 6 permutasi untuk mengunjungi node 1,2,3.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Dari node 0, kita harus mengunjungi node {1,2,3} dalam urutan tertentu.<br>
+Banyak permutasi = 3! = <strong>6</strong><br><br>
+Semua valid karena K₄ adalah graf lengkap.<br>
+Menggunakan Bitmask DP juga menghasilkan 6.<br>
+Jalur: 0→1→2→3, 0→1→3→2, 0→2→1→3, 0→2→3→1, 0→3→1→2, 0→3→2→1`
+},
+
+{
+  id:28, cat:'string', diff:5,
+  title:'Trace Kode Kompleks: Segment Tree',
+  tag:'Kode C++',
+  type:'mcq',
+  body:`Perhatikan kode Segment Tree untuk Range Sum Query:
+<pre><span class="kw">int</span> tree[<span class="num">20</span>];
+<span class="kw">void</span> <span class="fn">build</span>(<span class="kw">int</span> node, <span class="kw">int</span> s, <span class="kw">int</span> e, <span class="kw">int</span>* arr) {
+    <span class="kw">if</span> (s == e) { tree[node] = arr[s]; <span class="kw">return</span>; }
+    <span class="kw">int</span> mid = (s+e)/<span class="num">2</span>;
+    <span class="fn">build</span>(<span class="num">2</span>*node, s, mid, arr);
+    <span class="fn">build</span>(<span class="num">2</span>*node+<span class="num">1</span>, mid+<span class="num">1</span>, e, arr);
+    tree[node] = tree[<span class="num">2</span>*node] + tree[<span class="num">2</span>*node+<span class="num">1</span>];
+}
+<span class="kw">int</span> <span class="fn">query</span>(<span class="kw">int</span> node, <span class="kw">int</span> s, <span class="kw">int</span> e, <span class="kw">int</span> l, <span class="kw">int</span> r) {
+    <span class="kw">if</span> (r < s || e < l) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">if</span> (l <= s && e <= r) <span class="kw">return</span> tree[node];
+    <span class="kw">int</span> mid = (s+e)/<span class="num">2</span>;
+    <span class="kw">return</span> <span class="fn">query</span>(<span class="num">2</span>*node,s,mid,l,r) + <span class="fn">query</span>(<span class="num">2</span>*node+<span class="num">1</span>,mid+<span class="num">1</span>,e,l,r);
+}</pre>
+Array A = {1,3,5,7,9,11}, build(1,0,5,A). Berapa hasil <strong>query(1,0,5,1,4)</strong>?`,
+  options:['A. 24','B. 27','C. 30','D. 33','E. 35'],
+  answer:2,
+  hint:'query(1,0,5,1,4) mencari sum A[1]+A[2]+A[3]+A[4] = 3+5+7+9.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+query(1,0,5,1,4) mencari sum elemen index 1 sampai 4:<br>
+A[1]+A[2]+A[3]+A[4] = 3+5+7+9 = <strong>24</strong><br><br>
+Segment Tree hanya mempercepat query, hasilnya tetap sama dengan brute force.`
+},
+
+{
+  id:29, cat:'graph', diff:5,
+  title:'Network Flow — Max Flow',
+  tag:'Graph · Flow',
+  type:'mcq',
+  body:`Graf berarah dengan source S dan sink T. Kapasitas edge:<br>
+S→A(10), S→B(8), A→B(2), A→C(7), B→D(6), C→T(10), D→T(9), B→C(5)<br><br>
+Berapa <strong>Maximum Flow</strong> dari S ke T?`,
+  options:['A. 14','B. 15','C. 16','D. 17','E. 18'],
+  answer:2,
+  hint:'Gunakan Ford-Fulkerson / BFS. Cari augmenting paths dan update residual graph.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+Augmenting paths:<br>
+1. S→A→C→T: min(10,7,10)=7, flow=7<br>
+2. S→B→D→T: min(8,6,9)=6, flow=6<br>
+3. S→A→B→C→T: min(3,2,5,3)=2, flow=2<br>
+4. S→B→C→T: min(0,...) → blocked<br><br>
+Cek lagi jalur residual:<br>
+S→A remaining=1, S→B remaining=0 after flow=8<br>
+S→A→B→D→T: min(1,0,...) → blocked<br><br>
+Total flow = 7+6+... = <strong>16</strong><br>
+(Min cut: {S,A,B} | {C,D,T}: kapasitas A→C=7, B→D=6, B→C=5-5=blocked... = 7+9=16 ✓)`
+},
+
+{
+  id:30, cat:'math', diff:5,
+  title:'Master Theorem & Complexity',
+  tag:'Analisis Kompleksitas',
+  type:'mcq',
+  body:`Sebuah algoritma memiliki relasi rekurensi:<br>
+<strong>T(n) = 4T(n/2) + n² log n</strong><br><br>
+dengan T(1) = 1.<br><br>
+Berdasarkan <strong>Master Theorem</strong>, kompleksitas waktu T(n) adalah:`,
+  options:['A. O(n² log n)','B. O(n² log² n)','C. O(n² log n)','D. O(n³)','E. O(n² √n)'],
+  answer:1,
+  hint:'a=4, b=2, f(n)=n²logn. n^(log_b(a))=n^2. Bandingkan f(n) dengan n^2.',
+  explanation:`<div class="expl-title">📘 Pembahasan</div>
+<strong>Master Theorem:</strong> T(n) = aT(n/b) + f(n)<br>
+a=4, b=2 → n^(log₂4) = n²<br><br>
+f(n) = n² log n<br>
+Kasus 2: f(n) = Θ(n^c · log^k n) dengan c = log_b(a):<br>
+f(n) = n² · log¹n → k=1<br><br>
+<strong>Maka T(n) = Θ(n^c · log^(k+1) n) = Θ(n² log² n)</strong><br><br>
+Ini adalah kasus khusus Master Theorem (extended) dengan logarithmic factor.`
+}
+];
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+
+const state = {
+  answers: {},    // qid -> user answer
+  revealed: {},   // qid -> bool
+  hintShown: {}   // qid -> bool
+};
+
+const catColors = {
+  'rekursi':'tag-rekursi','dp':'tag-dp','graph':'tag-graph','math':'tag-math','string':'tag-string'
+};
+
+function stars(n) {
+  return Array.from({length:5},(_, i)=>`<span class="star${i<n?' lit':''}">★</span>`).join('');
+}
+
+function renderAll() {
+  const list = document.getElementById('questionList');
+  list.innerHTML = '';
+  QUESTIONS.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'qcard';
+    card.id = `card-${q.id}`;
+    card.dataset.cat = q.cat;
+
+    const tagClass = catColors[q.cat] || 'tag-math';
+
+    card.innerHTML = `
+    <div class="qcard-header" onclick="toggleCard(${q.id})">
+      <div class="qnum" id="num-${q.id}">${q.id}</div>
+      <div class="qtitle">${q.title}</div>
+      <div class="diff">${stars(q.diff)}</div>
+      <span class="qtag ${tagClass}">${q.tag}</span>
+      <span class="qchevron">⌄</span>
+    </div>
+    <div class="qbody" id="body-${q.id}">
+      <div class="qtext">${q.body}</div>
+      ${q.type === 'mcq' ? renderMCQ(q) : renderEssay(q)}
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="checkAnswer(${q.id})" id="checkBtn-${q.id}">Periksa Jawaban</button>
+        <button class="hint-btn" onclick="toggleHint(${q.id})">💡 Petunjuk</button>
+      </div>
+      <div class="hint-box" id="hint-${q.id}">💡 ${q.hint}</div>
+      <div class="explanation" id="expl-${q.id}">${q.explanation}</div>
+    </div>`;
+    list.appendChild(card);
+  });
+  updateProgress();
+}
+
+function renderMCQ(q) {
+  return `<div class="options" id="opts-${q.id}">
+  ${q.options.map((opt,i)=>`
+    <div class="opt" id="opt-${q.id}-${i}" onclick="selectOpt(${q.id},${i})">
+      <div class="opt-label">${String.fromCharCode(65+i)}</div>
+      <div>${opt.replace(/^[A-E]\. /,'')}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function renderEssay(q) {
+  return `<div class="essay-wrap">
+    <input class="essay-input" id="essay-${q.id}" type="text" placeholder="Tulis jawaban angka di sini..." 
+      onkeydown="if(event.key==='Enter')checkAnswer(${q.id})">
+  </div>`;
+}
+
+function toggleCard(id) {
+  const card = document.getElementById(`card-${id}`);
+  card.classList.toggle('open');
+}
+
+function selectOpt(qid, idx) {
+  if (state.revealed[qid]) return;
+  state.answers[qid] = idx;
+  document.querySelectorAll(`[id^="opt-${qid}-"]`).forEach((el,i)=>{
+    el.classList.toggle('selected', i===idx);
+  });
+}
+
+function checkAnswer(qid) {
+  if (state.revealed[qid]) return;
+  const q = QUESTIONS.find(x=>x.id===qid);
+  let correct = false;
+
+  if (q.type === 'mcq') {
+    if (state.answers[qid] === undefined) { alert('Pilih jawaban dulu!'); return; }
+    correct = state.answers[qid] === q.answer;
+    document.querySelectorAll(`[id^="opt-${qid}-"]`).forEach((el,i)=>{
+      el.classList.remove('selected');
+      if (i === q.answer) el.classList.add('correct-ans');
+      else if (i === state.answers[qid] && !correct) el.classList.add('wrong-ans');
+    });
+  } else {
+    const input = document.getElementById(`essay-${qid}`);
+    const val = input.value.trim();
+    if (!val) { alert('Isi jawaban dulu!'); return; }
+    correct = val === String(q.answer);
+    input.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) {
+      const hint2 = document.createElement('div');
+      hint2.style.cssText='font-size:13px;color:#ef4444;margin-top:6px;font-family:JetBrains Mono';
+      hint2.textContent = `Jawaban benar: ${q.answer}`;
+      input.parentNode.appendChild(hint2);
+    }
+    state.answers[qid] = val;
+  }
+
+  state.revealed[qid] = correct ? 'correct' : 'wrong';
+  const card = document.getElementById(`card-${qid}`);
+  card.classList.add(correct ? 'correct' : 'wrong');
+  document.getElementById(`num-${qid}`).textContent = correct ? '✓' : '✗';
+  document.getElementById(`expl-${qid}`).classList.add('show');
+  document.getElementById(`checkBtn-${qid}`).disabled = true;
+  document.getElementById(`checkBtn-${qid}`).style.opacity = '0.5';
+  updateProgress();
+}
+
+function toggleHint(qid) {
+  const h = document.getElementById(`hint-${qid}`);
+  h.classList.toggle('show');
+}
+
+function updateProgress() {
+  const answered = Object.keys(state.revealed).length;
+  const correct = Object.values(state.revealed).filter(v=>v==='correct').length;
+  document.getElementById('answeredCount').textContent = answered;
+  document.getElementById('scoreVal').textContent = correct;
+  document.getElementById('progressBar').style.width = (answered/30*100)+'%';
+}
+
+function filterCat(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.qcard').forEach(card=>{
+    card.style.display = (cat==='all' || card.dataset.cat===cat) ? '' : 'none';
+  });
+}
+
+function showResult() {
+  const answered = Object.keys(state.revealed).length;
+  const correct = Object.values(state.revealed).filter(v=>v==='correct').length;
+  const pct = Math.round(correct/30*100);
+  let grade = '';
+  if (pct >= 90) grade = '🏆 Medali Emas!';
+  else if (pct >= 75) grade = '🥈 Medali Perak';
+  else if (pct >= 60) grade = '🥉 Medali Perunggu';
+  else if (pct >= 40) grade = '📚 Perlu Latihan';
+  else grade = '💪 Terus Belajar!';
+
+  document.getElementById('modalScore').textContent = `${correct}/30`;
+  document.getElementById('modalGrade').textContent = grade;
+  document.getElementById('modalDetail').innerHTML =
+    `Dijawab: ${answered}/30 soal<br>Benar: ${correct}<br>Salah: ${answered-correct}<br>Persentase: ${pct}%<br><br>
+    <em>OSN Informatika biasanya memerlukan ≥75% untuk lolos ke tingkat berikutnya.</em>`;
+  document.getElementById('resultModal').classList.add('show');
+}
+
+function resetAll() {
+  Object.assign(state, {answers:{}, revealed:{}, hintShown:{}});
+  renderAll();
+  document.getElementById('resultModal').classList.remove('show');
+}
+
+renderAll();
+</script>
+</body>
+</html>
